@@ -113,7 +113,7 @@ wordlist = wl.read()
 i = 0
 while i < (s_len - 1):
     word = input(color.DARKCYAN + f'please insert the {i + 1} word: ' + color.END)
-    if (word + '\n') in wordlist:
+    if ('\n' + word + '\n') in wordlist:
         i += 1
         seed_str = seed_str + word + ' '
         wl.seek(0)
