@@ -159,7 +159,7 @@ elif s_len == 21:
 max_rand = 2 ** (ent - (11 * (s_len - 1)))  # each word corresponds to 11 bits. Some bits missing to reach the requested entropy to calculate checksum
 ran_bits = str(bin(system_random.randint(0, max_rand))[2:])  # random bits to add to reach entropy bits
 ran_bits = ran_bits.zfill(ent - (11 * (s_len - 1)))
-print(color.YELLOW + '\nRandom bits added: ' + color.END + f'{ran_bits}\n')
+print(color.YELLOW + '\nRandom bits added: ' + color.END + f'{ran_bits}')
 str_bin += ran_bits  # adds last bits before the checksum
 
 bytes = int(ent / 8)
@@ -186,19 +186,21 @@ str_hash = hashlib.sha256(tmp_bin).hexdigest()  # hashing binary of entropy
 int_hash = int(str_hash, base=16)
 bin_hash = str(bin(int_hash))[2:]
 
-checksum_lenght = int(ent / 32)  # Length of checksum is 1 bit every 32 of the mnemonic
-checksum = bin_hash[0:checksum_lenght]  # Getting first digits of hash (4 to 8 depending on entropy)
 # Adding checksum to entropy
-binary_seed = (bin(int(tmp_hex, 16))[2:].zfill(bytes * 8) + bin(int(str_hash, 16))[2:].zfill(256)[: bytes * 8 // 32])
+checksum = bin(int(str_hash, 16))[2:].zfill(256)[: bytes * 8 // 32]
+print(color.YELLOW + 'Checksum: ' + color.END + f'{checksum}')
+binary_seed = (bin(int(tmp_hex, 16))[2:].zfill(bytes * 8) + checksum)
 
 # Finding the last word
 last_word_bin = binary_seed[-11:]  # isolate the last 11 bits (random bits + checksum)
 last_word_index = int(last_word_bin, 2)
+
 wl.seek(0)
 for i, line in enumerate(wl):  # access wordlist at the desired index
     if i == last_word_index:
         last_word = line.strip('\n')
 
+print(color.YELLOW + f'Last word: ' + color.END + f'{last_word} (index: {last_word_index})')
 mnemonic = seed_str + last_word  # add last word to mnemonic
 print(color.GREEN + '\nYour mnemonic:' + color.END)
 print(color.DARKCYAN + mnemonic + color.END)
