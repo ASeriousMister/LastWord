@@ -3,6 +3,7 @@
 import hashlib
 import binascii
 import random
+import os
 
 system_random = random.SystemRandom()
 
@@ -18,6 +19,7 @@ class color:
     UNDERLINE = '\033[4m'
     END = '\033[0m'
 
+#os.chdir('/path/to/the/tool/')
 
 # Converts string with 0 and 1 to hexadecimal
 def binToHexa(n):
